@@ -1,5 +1,7 @@
+import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 
+import { checkNotice } from '@/api/ai/ai-feature';
 import { uploadImages } from '@/api/image/image';
 import LogEvents from '@/api/log/log-events';
 import sendLog from '@/api/log/send-log';
@@ -168,6 +170,28 @@ const handleNoticeSubmit = async ({
         return;
       }
       break;
+  }
+
+  const aiCheck = await checkNotice({
+    title,
+    body: koreanBody || '',
+  });
+
+  console.log(aiCheck);
+
+  if (aiCheck.mute) {
+    await Swal.fire({
+      html: `AI: 비슷한 공지가 감지되었습니다. <br>제목: ${aiCheck.mute_content.title} <br> 내용: ${aiCheck.mute_content.body}`,
+      icon: 'info',
+      showConfirmButton: true,
+    });
+    return;
+  } else {
+    await Swal.fire({
+      text: `AI: 비슷한 공지가 감지되지 않았습니다.`,
+      icon: 'info',
+      showConfirmButton: true,
+    });
   }
 
   Swal.fire({

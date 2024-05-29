@@ -293,7 +293,8 @@
       "submitFail": "공지 작성에 실패했습니다",
       "deleteSuccess": "공지가 성공적으로 삭제되었습니다",
       "deleteFail": "공지 삭제에 실패했습니다",
-      "tagCreationFail": "태그 생성에 실패했습니다"
+      "tagCreationFail": "태그 생성에 실패했습니다",
+      "aiConflictDetected": "AI: 겹치는 공지가 발견되었습니다. 공지를 다시 확인해주세요."
     }
   },
   "installApp": {
