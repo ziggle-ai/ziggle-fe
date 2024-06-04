@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { Notices } from '../notice/notice';
+
 export type DetectedNoticeType = {
   title: string;
   body: string;
@@ -24,4 +26,23 @@ export const checkNotice = ({
       body,
     }),
   }).then((res) => res.json());
+};
+
+const api = axios.create({
+  baseURL: process.env.AI_PUBLIC_API_BASE_URL,
+});
+
+export const getsimilarNotice = ({
+  body,
+}: {
+  body: string | undefined;
+}): Promise<Notices> => {
+  console.log('getsimilarNotice', body);
+  return api
+    .post<Notices>('similar_notices', {
+      body,
+    })
+    .then((res) => {
+      return res.data;
+    });
 };

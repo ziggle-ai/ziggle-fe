@@ -1,5 +1,6 @@
 import { ComponentProps, Suspense } from 'react';
 
+import { getsimilarNotice } from '@/api/ai/ai-feature';
 import { getAllNotices } from '@/api/notice/notice-server';
 import Analytics from '@/app/components/atoms/Analytics';
 import Pagination from '@/app/components/molecules/Pagination';
@@ -17,11 +18,23 @@ const Results = async ({
 }: ComponentProps<typeof SearchResults>) => {
   const pageAsNumber = Number.parseInt(page as string);
   const { t } = await createTranslation(lng);
-  const data = await getAllNotices({
-    ...props,
-    lang: lng,
-    offset: pageAsNumber * props.limit,
-  }).catch(() => ({ list: [], total: 0 }));
+  let data;
+
+  if (!props.search) {
+    console.log('getAllNotices');
+    data = await getAllNotices({
+      ...props,
+      lang: lng,
+      limit: 0,
+    }).catch(() => ({ list: [], total: 0 }));
+  } else {
+    data = await getsimilarNotice({
+      body: props.search,
+    }).catch(() => ({ list: [], total: 0 }));
+  }
+  data.list = data.list.map((notice) => {
+    return { ...notice, imageUrls: [], reactions: [] };
+  });
 
   return (
     <>
@@ -74,11 +87,21 @@ const SearchResults = async ({
 >) => {
   const pageAsNumber = Number.parseInt(page as string);
 
-  const data = await getAllNotices({
-    ...props,
-    lang: lng,
-    limit: 0,
-  }).catch(() => ({ list: [], total: 0 }));
+  let data;
+
+  console.log(props);
+
+  if (!props.search) {
+    data = await getAllNotices({
+      ...props,
+      lang: lng,
+      limit: 0,
+    }).catch(() => ({ list: [], total: 0 }));
+  } else {
+    data = await getsimilarNotice({
+      body: props.search,
+    }).catch(() => ({ list: [], total: 0 }));
+  }
 
   const pagination = (
     <div className="flex justify-center">
