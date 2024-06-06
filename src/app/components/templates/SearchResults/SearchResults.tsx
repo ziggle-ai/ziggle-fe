@@ -104,6 +104,7 @@ const SearchResults = async ({
       body: props.search,
     }).catch(() => ({ list: [], total: 0 }));
   }
+  console.log(data);
 
   const pagination = (
     <div className="flex justify-center">
