@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { Notices } from '../notice/notice';
+import { Notice, Notices } from '../notice/notice';
 
 export type DetectedNoticeType = {
   title: string;
@@ -39,10 +39,13 @@ export const getsimilarNotice = ({
 }): Promise<Notices> => {
   console.log('getsimilarNotice', body);
   return api
-    .post<Notices>('similar_notices', {
+    .post<Notice[]>('similar_notices', {
       body,
     })
     .then((res) => {
-      return res.data;
+      return {
+        list: res.data,
+        total: res.data.length,
+      };
     });
 };
