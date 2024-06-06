@@ -36,6 +36,8 @@ const Results = async ({
     return { ...notice, imageUrls: [], reactions: [] };
   });
 
+  console.log(data);
+
   return (
     <>
       {data?.list.length !== 0 && (
