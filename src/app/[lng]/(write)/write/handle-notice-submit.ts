@@ -181,7 +181,11 @@ const handleNoticeSubmit = async ({
 
   if (aiCheck.mute) {
     await Swal.fire({
-      html: `AI: 비슷한 공지가 감지되었습니다.<br>유사도: ${aiCheck.mute_content['similarity score']} <br>제목: ${aiCheck.mute_content.title} <br> 내용: ${aiCheck.mute_content.body}`,
+      html: `<h3>AI: 비슷한 공지가 감지되었습니다.</h2><br>유사도: ${
+        aiCheck.mute_content['similarity score']
+      } <br>제목: ${
+        aiCheck.mute_content.title
+      } <br><br> 내용: ${aiCheck.mute_content.body.replace(/\n/g, '<br>')}`,
       icon: 'info',
       showConfirmButton: true,
     });
