@@ -5,6 +5,7 @@ import { Notice, Notices } from '../notice/notice';
 export type DetectedNoticeType = {
   title: string;
   body: string;
+  'similarity score': string;
 };
 
 export type CheckResultType = {
