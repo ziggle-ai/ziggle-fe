@@ -39,7 +39,7 @@ export const postEdgecase = ({
   result_body: string;
   similarity_score: number;
 }): Promise<void> => {
-  return fetch('/api/ai/insert_notice_to_mongodb', {
+  return fetch('/api/ai/insert_mute_edge_case', {
     method: 'POST',
     body: JSON.stringify({
       source_body,
