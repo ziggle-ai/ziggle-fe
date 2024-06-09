@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 
-import { checkNotice } from '@/api/ai/ai-feature';
+import { checkNotice, postEdgecase } from '@/api/ai/ai-feature';
 import { uploadImages } from '@/api/image/image';
 import LogEvents from '@/api/log/log-events';
 import sendLog from '@/api/log/send-log';
@@ -180,7 +180,6 @@ const handleNoticeSubmit = async ({
   console.log(aiCheck);
 
   if (aiCheck.mute) {
-    let confirm = true;
     await Swal.fire({
       html: `<h3>AI: 비슷한 공지가 감지되었습니다.</h2><br>유사도: ${
         aiCheck.mute_content['similarity score']
@@ -195,20 +194,25 @@ const handleNoticeSubmit = async ({
       cancelButtonText: '아니에요',
     }).then(async (result) => {
       if (!result.isConfirmed) {
+        await postEdgecase({
+          source_body: koreanBody || '',
+          result_body: aiCheck.mute_content.body,
+          similarity_score: aiCheck.mute_content['similarity score'],
+        });
         await Swal.fire({
           text: 'AI: 해당 공지를 등록하시겠습니까?',
           icon: 'info',
-          showConfirmButton: false,
+          showConfirmButton: true,
           confirmButtonText: '네',
         });
       } else {
-        confirm = false;
-        return;
+        await Swal.fire({
+          text: 'AI: 해당 공지는 알람없이 등록됩니다.',
+          icon: 'info',
+          showConfirmButton: true,
+        });
       }
     });
-    if (!confirm) {
-      return;
-    }
   } else {
     await Swal.fire({
       text: `AI: 비슷한 공지가 감지되지 않았습니다.`,

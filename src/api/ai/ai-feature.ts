@@ -1,11 +1,12 @@
 import axios from 'axios';
+import { number } from 'prop-types';
 
 import { Notice, Notices } from '../notice/notice';
 
 export type DetectedNoticeType = {
   title: string;
   body: string;
-  'similarity score': string;
+  'similarity score': number;
 };
 
 export type CheckResultType = {
@@ -25,6 +26,25 @@ export const checkNotice = ({
     body: JSON.stringify({
       title,
       body,
+    }),
+  }).then((res) => res.json());
+};
+
+export const postEdgecase = ({
+  source_body,
+  result_body,
+  similarity_score,
+}: {
+  source_body: string;
+  result_body: string;
+  similarity_score: number;
+}): Promise<void> => {
+  return fetch('/api/ai/insert_notice_to_mongodb', {
+    method: 'POST',
+    body: JSON.stringify({
+      source_body,
+      result_body,
+      similarity_score,
     }),
   }).then((res) => res.json());
 };
