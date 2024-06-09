@@ -187,9 +187,21 @@ const handleNoticeSubmit = async ({
         aiCheck.mute_content.title
       } <br><br> 내용: ${aiCheck.mute_content.body.replace(/\n/g, '<br>')}`,
       icon: 'info',
-      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: '맞아요',
+      cancelButtonText: '아니요',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await Swal.fire({
+          text: 'AI: 해당 공지를 등록하시겠습니까?',
+          icon: 'info',
+          showConfirmButton: false,
+          confirmButtonText: '네',
+        });
+      } else {
+        return;
+      }
     });
-    return;
   } else {
     await Swal.fire({
       text: `AI: 비슷한 공지가 감지되지 않았습니다.`,
