@@ -180,18 +180,21 @@ const handleNoticeSubmit = async ({
   console.log(aiCheck);
 
   if (aiCheck.mute) {
+    let confirm = true;
     await Swal.fire({
       html: `<h3>AI: 비슷한 공지가 감지되었습니다.</h2><br>유사도: ${
         aiCheck.mute_content['similarity score']
       } <br>제목: ${
         aiCheck.mute_content.title
-      } <br><br> 내용: ${aiCheck.mute_content.body.replace(/\n/g, '<br>')}`,
+      } <br><br> 내용: ${aiCheck.mute_content.body.replace(/\n/g, '<br>')}
+      <br>
+      같은 공지가 맞나요?`,
       icon: 'info',
       showCancelButton: true,
       confirmButtonText: '맞아요',
-      cancelButtonText: '아니요',
+      cancelButtonText: '아니에요',
     }).then(async (result) => {
-      if (result.isConfirmed) {
+      if (!result.isConfirmed) {
         await Swal.fire({
           text: 'AI: 해당 공지를 등록하시겠습니까?',
           icon: 'info',
@@ -199,9 +202,13 @@ const handleNoticeSubmit = async ({
           confirmButtonText: '네',
         });
       } else {
+        confirm = false;
         return;
       }
     });
+    if (!confirm) {
+      return;
+    }
   } else {
     await Swal.fire({
       text: `AI: 비슷한 공지가 감지되지 않았습니다.`,
