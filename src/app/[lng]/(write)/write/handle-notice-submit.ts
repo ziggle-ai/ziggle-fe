@@ -194,11 +194,6 @@ const handleNoticeSubmit = async ({
       cancelButtonText: '아니에요',
     }).then(async (result) => {
       if (!result.isConfirmed) {
-        await postEdgecase({
-          source_body: koreanBody || '',
-          result_body: aiCheck.mute_content.body,
-          similarity_score: aiCheck.mute_content['similarity score'],
-        });
         await Swal.fire({
           text: 'AI: 해당 공지를 등록하시겠습니까?',
           icon: 'info',
@@ -206,6 +201,11 @@ const handleNoticeSubmit = async ({
           confirmButtonText: '네',
         });
       } else {
+        await postEdgecase({
+          source_body: koreanBody || '',
+          result_body: aiCheck.mute_content.body,
+          similarity_score: aiCheck.mute_content['similarity score'],
+        });
         await Swal.fire({
           text: 'AI: 해당 공지는 알람없이 등록됩니다.',
           icon: 'info',
